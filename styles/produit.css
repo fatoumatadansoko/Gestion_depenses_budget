@@ -1,0 +1,28 @@
+
+.calendar {
+    width: 100%;
+    border-collapse: collapse;
+}
+.calendar th, .calendar td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+.calendar .today {
+    background-color: #F6511D;
+}
+.product-details {
+    margin-top: 20px;
+}
+.add-product-btn {
+    margin-top: 20px;
+    font-size: 24px;
+    color: #fff;
+    background-color: #F6511D;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+}
+.add-product-btn:hover {
+    background-color: #F6511D;
+}

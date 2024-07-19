@@ -1,6 +1,6 @@
 /* styles.css */
 body {
-    font-family: 'Lato', sans-serif;
+    font-family: 'work sans', sans-serif;
     margin: 0;
     padding: 0;
     line-height: 1.5;
@@ -23,4 +23,20 @@ section {
 
 h1, h2 {
     margin: 0 0 1rem 0;
+}
+
+ #registration-section, #login-section {
+    display: none;
+}
+.btn-orange {
+    background-color: #F6511D;
+    border-color: #F6511D;
+    color: white;
+    font-size: 16px;
+    width: 100%;
+    max-width: 150px;
+}
+.btn-orange:hover {
+    background-color: #F6511D;
+    border-color: #F6511D;
 }

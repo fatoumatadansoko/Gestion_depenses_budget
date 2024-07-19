@@ -1,30 +1,128 @@
-$(document).ready(function() {
-    $('#login-section').hide(); // Masquer la section de connexion au chargement
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-analytics.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-auth.js";
 
-    $('#register').click(function() {
-        // Masquer la section de connexion
-        $('#login-section').hide();
+// Votre configuration Firebase
+const firebaseConfig = {
+    apiKey: "AIzaSyDiW8qxDzIYMQmwrwjbCQwmVbdZtbojW-Y",
+    authDomain: "projet-gestion-depense-budget.firebaseapp.com",
+    projectId: "projet-gestion-depense-budget",
+    storageBucket: "projet-gestion-depense-budget.appspot.com",
+    messagingSenderId: "1053261280689",
+    appId: "1:1053261280689:web:2afefe516ff5e681e9f990",
+    measurementId: "G-8SS2X3JYTM"
+};
 
-        // Simuler l'inscription et afficher la section de connexion après l'inscription
-        setTimeout(function() {
-            alert("Inscription réussie. Veuillez vous connecter.");
-            $('#registration-section').hide();
-            $('#login-section').show();
-        }, 1000); // Temps d'attente simulé pour l'inscription
+// Initialiser Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const auth = getAuth();
+
+document.addEventListener("DOMContentLoaded", function() {
+    const registrationSection = document.getElementById("registration-section");
+    const loginSection = document.getElementById("login-section");
+    const logoutButton = document.getElementById("logout");
+    const showRegistrationLink = document.getElementById("show-registration");
+    const showLoginLink = document.getElementById("show-login");
+
+    // Afficher la section d'inscription et masquer la section de connexion
+    showRegistrationLink.addEventListener("click", function(event) {
+        event.preventDefault();
+        registrationSection.style.display = 'block';
+        loginSection.style.display = 'none';
     });
 
-    $('#login').click(function() {
-        // Gestion de la connexion ici
-        alert("Connexion réussie.");
-        $('#login-section').hide();
-        $('#logout').show();
+    // Afficher la section de connexion et masquer la section d'inscription
+    showLoginLink.addEventListener("click", function(event) {
+        event.preventDefault();
+        registrationSection.style.display = 'none';
+        loginSection.style.display = 'block';
     });
 
-    $('#logout').click(function() {
-        // Gestion de la déconnexion ici
-        alert("Déconnexion réussie.");
-        $('#registration-section').hide();
-        $('#login-section').show();
-        $('#logout').hide();
+    document.getElementById("register").addEventListener("click", function() {
+        var email = document.getElementById("email").value;
+        var password = document.getElementById("password").value;
+
+        if (!validateEmail(email)) {
+            alert("Veuillez entrer un email valide.");
+            return;
+        }
+
+        if (password.length < 8) {
+            alert("Le mot de passe doit contenir au moins 8 caractères.");
+            return;
+        }
+
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Inscription réussie
+                const user = userCredential.user;
+                console.log(user);
+                registrationSection.style.display = 'none';
+                loginSection.style.display = 'block';
+            })
+            .catch((error) => {
+                const errorMessage = error.message;
+                console.log(errorMessage);
+            });
+    });
+
+    document.getElementById("login").addEventListener("click", function() {
+        var email = document.getElementById("login_email").value;
+        var password = document.getElementById("login_password").value;
+
+        if (!validateEmail(email)) {
+            alert("Veuillez entrer un email valide.");
+            return;
+        }
+
+        if (password.length < 8) {
+            alert("Le mot de passe doit contenir au moins 8 caractères.");
+            return;
+        }
+
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // Connexion réussie
+                const user = userCredential.user;
+                console.log(user);
+                logoutButton.style.display = 'block';
+                window.location.href = 'produits.html'; // Redirection vers la page des produits
+            })
+            .catch((error) => {
+                const errorMessage = error.message;
+                console.log(errorMessage);
+            });
+    });
+
+    logoutButton.addEventListener("click", function() {
+        signOut(auth).then(() => {
+            // Déconnexion réussie
+            console.log('Déconnexion réussie.');
+            logoutButton.style.display = 'none';
+            loginSection.style.display = 'block';
+            registrationSection.style.display = 'none';
+        }).catch((error) => {
+            // Une erreur est survenue
+            console.log('Une erreur est survenue.');
+        });
+    });
+
+    // Configuration initiale de l'affichage en fonction de l'état d'authentification
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            // L'utilisateur est connecté
+            logoutButton.style.display = 'block';
+            window.location.href = 'produits.html'; // Redirection vers la page des produits
+        } else {
+            // Aucun utilisateur n'est connecté
+            registrationSection.style.display = 'block';
+            loginSection.style.display = 'none';
+        }
     });
 });
+
+function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+}

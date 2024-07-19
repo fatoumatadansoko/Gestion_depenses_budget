@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajouter Produit</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            margin-top: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .btn-submit {
+            background-color: orange;
+            color: white;
+            border: none;
+        }
+        .btn-submit:hover {
+            background-color: darkorange;
+        }
+        .error {
+            color: red;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Ajouter un Produit</h1>
+    <form id="add-product-form">
+        <div class="form-group">
+            <label for="product-date">Date</label>
+            <input type="date" id="product-date" name="product-date" class="form-control" required>
+            <div id="errorDate" class="error"></div>
+        </div>
+        <div class="form-group">
+            <label for="product-name">Produit</label>
+            <input type="text" id="product-name" name="product-name" class="form-control" placeholder="Nom du produit" required>
+            <div id="errorName" class="error"></div>
+        </div>
+        <div class="form-group">
+            <label for="product-quantity">Quantité</label>
+            <input type="number" id="product-quantity" name="product-quantity" class="form-control" placeholder="Quantité" required min="1">
+            <div id="errorQuantity" class="error"></div>
+        </div>
+        <div class="form-group">
+            <label for="product-price">Prix</label>
+            <input type="number" id="product-price" name="product-price" class="form-control" placeholder="Prix" required min="0" step="0.01">
+            <div id="errorPrice" class="error"></div>
+        </div>
+        <button type="submit" id="submitBtn" class="btn btn-submit" disabled>Ajouter Produit</button>
+    </form>
+</div>
+
+<script type="module" src="scripts/addproduit.js"></script>
+
+</body>
+</html>
