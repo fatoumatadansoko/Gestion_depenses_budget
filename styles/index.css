@@ -1,0 +1,93 @@
+/* Styles mobiles */
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.logo-container {
+    margin-bottom: 20px;
+}
+
+.logo {
+    width: 80%;
+    max-width: 200px;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.action-button {
+    background-color: #F6511D;
+    border: none;
+    color: white;
+    padding: 15px 0;
+    margin: 10px 0;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+}
+
+.text-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideOut {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+}
+
+.animated-text {
+    display: inline-block;
+    animation: slideIn 1s forwards;
+}
+
+/* Styles pour les écrans plus larges */
+@media (min-width: 600px) {
+    .logo {
+        width: 50%;
+        max-width: 250px;
+    }
+
+    .action-button {
+        width: auto;
+        padding: 15px 30px;
+    }
+}
+
+@media (min-width: 900px) {
+    .logo {
+        width: 30%;
+        max-width: 300px;
+    }
+}
