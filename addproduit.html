@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ajouter Produit</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         .container {
             margin-top: 20px;
@@ -13,23 +16,52 @@
             margin-bottom: 15px;
         }
         .btn-submit {
-            background-color: orange;
+            background-color: #FF4757;
             color: white;
             border: none;
         }
         .btn-submit:hover {
-            background-color: darkorange;
+            background-color: #FF4757;
         }
         .error {
             color: red;
             font-size: 0.9em;
+        }
+        .header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .header i {
+            font-size: 48px;
+            color: #FF4757;
+            margin-bottom: 10px;
+        }
+        .header h1 {
+            font-size: 24px;
+            text-align: center;
+        }
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            color: #FF4757;
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Ajouter un Produit</h1>
+    <a href="produits.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    <div class="header">
+        <i class="fas fa-shopping-cart"></i>
+        <h1>Nouvelle dépense</h1>
+    </div>
     <form id="add-product-form">
         <div class="form-group">
             <label for="product-date">Date</label>
@@ -53,15 +85,14 @@
         </div>
         <button type="submit" id="submitBtn" class="btn btn-submit" disabled>Ajouter Produit</button>
     </form>
-    <button class="btn btn-danger" id="logout-button">
+    <!-- <button class="btn btn-danger" id="logout-button">
         <i class="fas fa-sign-out-alt"></i> Déconnexion
-    </button>
+    </button> -->
 </div>
 
 <script type="module" src="scripts/addproduit.js"></script>
 <script type="module" src="scripts/produit.js"></script>
 <script src="scripts/logout.js"></script> <!-- Script de déconnexion -->
-
 
 </body>
 </html>

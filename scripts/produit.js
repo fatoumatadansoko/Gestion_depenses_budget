@@ -18,6 +18,7 @@ const db = getDatabase(app);
 
 document.addEventListener('DOMContentLoaded', async () => {
     const productDetailsContainer = document.getElementById('product-details');
+    const filterDay = document.getElementById('filter-day');
 
     // Fonction pour calculer le prix total
     const calculateTotalPrice = (products) => {
@@ -41,17 +42,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             productDetailsHtml += `
                 <li class="list-group-item ${boughtClass}" data-product-id="${product.id}">
                     <input type="checkbox" class="bought-checkbox" ${checked}> 
-                    <strong>Date:</strong> ${product.date || ''}<br>
-                    <strong>Produit:</strong> ${product.name || ''}<br>
-                    <strong>Quantité:</strong> ${quantity}<br>
-                    <strong>Prix Unitaire:</strong> ${price.toFixed(2)}€<br>
-                    <strong>Total:</strong> ${(quantity * price).toFixed(2)}€
+                    <div class="product-detail">
+                        <strong>Date:</strong> ${product.date || ''}<br>
+                        <strong>Produit:</strong> ${product.name || ''}<br>
+                        <strong>Quantité:</strong> ${quantity}<br>
+                        <strong>Prix Unitaire:</strong> ${price.toFixed(2)}CFA<br>
+                        <strong>Total:</strong> ${(quantity * price).toFixed(2)}CFA
+                    </div>
                 </li>
             `;
         });
 
         productDetailsHtml += `</ul>`;
-        productDetailsHtml += `<h4>Prix Total: ${totalPrice}€</h4>`;
+        productDetailsHtml += `<h4>Prix Total: ${totalPrice}CFA</h4>`;
         
         productDetailsContainer.innerHTML = productDetailsHtml;
 
@@ -99,13 +102,41 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
+    // Fonction pour filtrer les produits par jour
+    const filterProductsByDay = (products, day) => {
+        if (!day) return products;
+        return products.filter(product => product.date === day);
+    };
+
+    // Fonction pour charger les jours pour le filtre
+    const loadFilterDays = (products) => {
+        const uniqueDates = [...new Set(products.map(product => product.date))];
+        filterDay.innerHTML = '<option value="">Tous les jours</option>'; // Réinitialiser les options
+
+        uniqueDates.forEach(date => {
+            const option = document.createElement('option');
+            option.value = date;
+            option.textContent = date;
+            filterDay.appendChild(option);
+        });
+    };
+
     try {
         const products = await loadProductsFromFirebase();
+        loadFilterDays(products); // Charger les options du filtre
         if (products.length === 0) {
             productDetailsContainer.innerHTML = "<p>Aucun produit trouvé.</p>";
         } else {
             displayProductDetails(products);
         }
+
+        // Mettre à jour l'affichage en fonction du filtre sélectionné
+        filterDay.addEventListener('change', (event) => {
+            const selectedDay = event.target.value;
+            const filteredProducts = filterProductsByDay(products, selectedDay);
+            displayProductDetails(filteredProducts);
+        });
+
     } catch (error) {
         console.error('Erreur lors de la récupération des produits:', error);
     }
@@ -153,5 +184,3 @@ document.addEventListener('DOMContentLoaded', function() {
 
     generateCalendar(year, month);
 });
-
-

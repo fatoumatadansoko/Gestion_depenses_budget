@@ -9,6 +9,11 @@
 </head>
 <body>
     <div class="container">
+        <!-- Icône de déconnexion en haut à droite -->
+        <button class="btn btn-icon" id="logout-button">
+            <i class="fas fa-sign-out-alt"></i>
+        </button>
+
         <h1>Aujourd'hui</h1>
         <table class="calendar">
             <thead>
@@ -24,14 +29,23 @@
             </thead>
             <tbody id="calendar-body"></tbody>
         </table>
+        
+        <!-- Filtre pour trier les produits par jour -->
+        <div class="filter-section">
+            <label for="filter-day">Filtrer par jour:</label>
+            <select id="filter-day" class="form-control">
+                <option value="">Tous les jours</option>
+                <!-- Options pour les jours seront ajoutées dynamiquement -->
+            </select>
+        </div>
+
         <div id="product-details" class="product-details"></div>
-        <button class="btn btn-primary" onclick="window.location.href='addproduit.html';">+</button>
+        <button class="btn btn-orange" onclick="window.location.href='addproduit.html';">+</button>
     </div>
-    <button class="btn btn-danger" id="logout-button">
-        <i class="fas fa-sign-out-alt"></i> Déconnexion
-    </button>
+    
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script> <!-- Pour les icônes Font Awesome -->
     <script type="module" src="scripts/produit.js"></script>
     <script type="module" src="scripts/logout.js"></script> <!-- Script de déconnexion -->
 </body>

@@ -73,21 +73,50 @@ body {
 }
 
 /* Styles pour les écrans plus larges */
-@media (min-width: 600px) {
+@media (min-width: 768px) {
+    body {
+        padding: 40px;
+    }
+
     .logo {
-        width: 50%;
-        max-width: 250px;
+        width: 60%;
+        max-width: 300px;
+    }
+
+    .button-container {
+        flex-direction: row;
+        justify-content: center;
     }
 
     .action-button {
-        width: auto;
-        padding: 15px 30px;
+        font-size: 18px;
+        padding: 15px 20px;
+        margin: 0 10px;
+    }
+
+    .text-container {
+        margin-top: 30px;
     }
 }
 
-@media (min-width: 900px) {
+@media (min-width: 1024px) {
+    body {
+        padding: 60px;
+    }
+
     .logo {
-        width: 30%;
-        max-width: 300px;
+        width: 70%;
+        max-width: 400px;
+        margin-left: 20px;
+    }
+
+    .action-button {
+        font-size: 20px;
+        padding: 20px 30px;
+        margin: 0 15px;
+    }
+
+    .text-container {
+        margin-top: 40px;
     }
 }

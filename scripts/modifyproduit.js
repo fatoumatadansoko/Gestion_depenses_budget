@@ -1,6 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-import { getDatabase, ref, get, update,remove } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
-
+import { getDatabase, ref, get, update, remove } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDiW8qxDzIYMQmwrwjbCQwmVbdZtbojW-Y",
@@ -59,18 +58,30 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         await update(dbRef, updatedProduct);
 
-        alert('Produit mis à jour avec succès');
-        window.location.href = 'produits.html';
-    });
-});
-deleteButton.addEventListener('click', async () => {
-    if (confirm('Es-tu sûr de vouloir supprimer ce produit?')) {
-        try {
-            const dbRef = ref(db, `users/${currentUserId}/expenses/${productId}`);
-            await remove(dbRef);
+        Swal.fire({
+            title: "Good job!",
+            text: "modifié avec succès!",
+            icon: "success"
+        }).then(() => {
             window.location.href = 'produits.html';
-        } catch (error) {
-            console.error('Erreur lors de la suppression du produit:', error);
+        });
+    });
+
+    const deleteButton = document.getElementById('delete-button');
+    deleteButton.addEventListener('click', async () => {
+        if (confirm('Es-tu sûr de vouloir supprimer ce produit?')) {
+            try {
+                await remove(dbRef);
+                Swal.fire({
+                    title: "Supprimé!",
+                    text: "Le produit a été supprimé avec succès!",
+                    icon: "success"
+                }).then(() => {
+                    window.location.href = 'produits.html';
+                });
+            } catch (error) {
+                console.error('Erreur lors de la suppression du produit:', error);
+            }
         }
-    }
+    });
 });

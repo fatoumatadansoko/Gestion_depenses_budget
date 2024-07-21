@@ -9,7 +9,7 @@ const firebaseConfig = {
     messagingSenderId: "1053261280689",
     appId: "1:1053261280689:web:2afefe516ff5e681e9f990",
     measurementId: "G-8SS2X3JYTM"
-    };
+};
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -58,8 +58,17 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const productRef = push(ref(db, 'products/'));
             await set(productRef, newProduct);
-            alert('Produit ajouté avec succès !');
-            window.location.href = 'produits.html'; // Redirection vers la liste des produits
+            
+            // Afficher une notification SweetAlert2
+            Swal.fire({
+                title: 'Good job!',
+                text: 'Produit ajouté avec succès!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                window.location.href = 'produits.html'; // Redirection vers la liste des produits
+            });
+            
             form.reset();
             validateForm(); // Ensure the submit button is disabled
         } catch (error) {
