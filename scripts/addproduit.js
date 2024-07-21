@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const productRef = push(ref(db, 'products/'));
             await set(productRef, newProduct);
             alert('Produit ajouté avec succès !');
+            window.location.href = 'produits.html'; // Redirection vers la liste des produits
             form.reset();
             validateForm(); // Ensure the submit button is disabled
         } catch (error) {

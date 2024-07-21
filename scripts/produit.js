@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
-import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
+import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDiW8qxDzIYMQmwrwjbCQwmVbdZtbojW-Y",
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Fonction pour calculer le prix total
     const calculateTotalPrice = (products) => {
-        return products.reduce((total, product) => total + (product.quantity * product.price), 0).toFixed(2);
+        return products.reduce((total, product) => total + (parseFloat(product.quantity) * parseFloat(product.price)), 0).toFixed(2);
     };
 
     // Fonction pour afficher les détails des produits
@@ -34,13 +34,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         productDetailsHtml += `<ul class="list-group">`;
 
         products.forEach(product => {
+            let quantity = parseFloat(product.quantity) || 0;
+            let price = parseFloat(product.price) || 0;
+            const boughtClass = product.bought ? 'bought' : '';
+            const checked = product.bought ? 'checked' : '';
             productDetailsHtml += `
-                <li class="list-group-item">
-                    <strong>Date:</strong> ${product.date}<br>
-                    <strong>Produit:</strong> ${product.name}<br>
-                    <strong>Quantité:</strong> ${product.quantity}<br>
-                    <strong>Prix Unitaire:</strong> ${product.price.toFixed(2)}€<br>
-                    <strong>Total:</strong> ${(product.quantity * product.price).toFixed(2)}€
+                <li class="list-group-item ${boughtClass}" data-product-id="${product.id}">
+                    <input type="checkbox" class="bought-checkbox" ${checked}> 
+                    <strong>Date:</strong> ${product.date || ''}<br>
+                    <strong>Produit:</strong> ${product.name || ''}<br>
+                    <strong>Quantité:</strong> ${quantity}<br>
+                    <strong>Prix Unitaire:</strong> ${price.toFixed(2)}€<br>
+                    <strong>Total:</strong> ${(quantity * price).toFixed(2)}€
                 </li>
             `;
         });
@@ -49,18 +54,58 @@ document.addEventListener('DOMContentLoaded', async () => {
         productDetailsHtml += `<h4>Prix Total: ${totalPrice}€</h4>`;
         
         productDetailsContainer.innerHTML = productDetailsHtml;
+
+        document.querySelectorAll('.bought-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', async (event) => {
+                const productId = event.target.closest('.list-group-item').dataset.productId;
+                const isChecked = event.target.checked;
+                await updateProductBoughtStatus(productId, isChecked);
+            });
+        });
+
+        document.querySelectorAll('.list-group-item').forEach(item => {
+            item.addEventListener('click', (event) => {
+                if (!event.target.classList.contains('bought-checkbox')) {
+                    const productId = event.currentTarget.dataset.productId;
+                    window.location.href = `modifyproduit.html?id=${productId}`;
+                }
+            });
+        });
     };
 
     // Fonction pour charger les produits depuis Firebase
     const loadProductsFromFirebase = async () => {
         const dbRef = ref(db, 'products/');
         const snapshot = await get(dbRef);
-        return snapshot.exists() ? snapshot.val() : [];
+        const products = snapshot.exists() ? Object.entries(snapshot.val()).map(([id, product]) => ({ id, ...product })) : [];
+        return products;
+    };
+
+    // Fonction pour mettre à jour le statut d'achat d'un produit
+    const updateProductBoughtStatus = async (productId, bought) => {
+        const dbRef = ref(db, `products/${productId}`);
+        await update(dbRef, { bought: bought });
+
+        // Mettre à jour uniquement l'élément DOM correspondant
+        const productItem = document.querySelector(`[data-product-id="${productId}"]`);
+        if (productItem) {
+            if (bought) {
+                productItem.classList.add('bought');
+                productItem.querySelector('.bought-checkbox').checked = true;
+            } else {
+                productItem.classList.remove('bought');
+                productItem.querySelector('.bought-checkbox').checked = false;
+            }
+        }
     };
 
     try {
         const products = await loadProductsFromFirebase();
-        displayProductDetails(Object.values(products));
+        if (products.length === 0) {
+            productDetailsContainer.innerHTML = "<p>Aucun produit trouvé.</p>";
+        } else {
+            displayProductDetails(products);
+        }
     } catch (error) {
         console.error('Erreur lors de la récupération des produits:', error);
     }
@@ -108,3 +153,5 @@ document.addEventListener('DOMContentLoaded', function() {
 
     generateCalendar(year, month);
 });
+
+

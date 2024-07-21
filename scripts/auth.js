@@ -56,14 +56,12 @@ document.addEventListener("DOMContentLoaded", function() {
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 // Inscription réussie
-                const user = userCredential.user;
-                console.log(user);
+                console.log('Inscription réussie:', userCredential.user);
                 registrationSection.style.display = 'none';
                 loginSection.style.display = 'block';
             })
             .catch((error) => {
-                const errorMessage = error.message;
-                console.log(errorMessage);
+                console.log('Erreur lors de l\'inscription:', error.message);
             });
     });
 
@@ -84,36 +82,25 @@ document.addEventListener("DOMContentLoaded", function() {
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 // Connexion réussie
-                const user = userCredential.user;
-                console.log(user);
+                console.log('Connexion réussie:', userCredential.user);
                 logoutButton.style.display = 'block';
                 window.location.href = 'produits.html'; // Redirection vers la page des produits
             })
             .catch((error) => {
-                const errorMessage = error.message;
-                console.log(errorMessage);
+                console.log('Erreur lors de la connexion:', error.message);
             });
     });
 
-    logoutButton.addEventListener("click", function() {
-        signOut(auth).then(() => {
-            // Déconnexion réussie
-            console.log('Déconnexion réussie.');
-            logoutButton.style.display = 'none';
-            loginSection.style.display = 'block';
-            registrationSection.style.display = 'none';
-        }).catch((error) => {
-            // Une erreur est survenue
-            console.log('Une erreur est survenue.');
-        });
-    });
+   
 
     // Configuration initiale de l'affichage en fonction de l'état d'authentification
     auth.onAuthStateChanged((user) => {
         if (user) {
             // L'utilisateur est connecté
             logoutButton.style.display = 'block';
-            window.location.href = 'produits.html'; // Redirection vers la page des produits
+            if (window.location.pathname !== '/produits.html') {
+                window.location.href = 'produits.html'; // Redirection vers la page des produits si ce n'est pas déjà sur cette page
+            }
         } else {
             // Aucun utilisateur n'est connecté
             registrationSection.style.display = 'block';

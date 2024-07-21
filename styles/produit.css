@@ -26,3 +26,11 @@
 .add-product-btn:hover {
     background-color: #F6511D;
 }
+.bought {
+    background-color: #d4edda; /* Couleur de fond verte pour indiquer que c'est acheté */
+    text-decoration: line-through; /* Texte barré */
+}
+
+.today {
+    background-color: #f0ad4e; /* Couleur de fond pour le jour actuel */
+}

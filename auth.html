@@ -28,7 +28,7 @@
 </div>
 <br>
 <div class="container">
-    <div class="row" id="registration-section">
+    <div class="row" id="registration-section" style="display: none;">
         <div class="col-sm-4">
             <form name="registration_form" id="registration_form" method="post" action="#" enctype="multipart/form-data">
                 <h1>S'inscrire</h1>
@@ -43,7 +43,7 @@
                     <input type="password" name="password" id="password" class="form-control" placeholder="mot de passe" required minlength="8">
                 </div>
                 <button type="button" id="register" name="register" class="btn btn-orange">Inscription</button>
-                <p>Déja un compte ? <a href="#" id="show-login">Se connecter</a></p>
+                <p>Déjà un compte ? <a href="#" id="show-login">Se connecter</a></p>
             </form>
         </div><!-- end col -->
     </div><!-- end row -->
@@ -59,11 +59,11 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="login_password">Password</label>
-                    <input type="password" name="login_password" id="login_password" class="form-control" placeholder="mot de pass" required minlength="8">
+                    <label for="login_password">Mot de passe</label>
+                    <input type="password" name="login_password" id="login_password" class="form-control" placeholder="mot de passe" required minlength="8">
                 </div>
                 <button type="button" id="login" name="login" class="btn btn-orange">Connexion</button>
-                <p>Pas de compte? <a href="#" id="show-registration">S'inscrire</a></p>
+                <p>Pas de compte ? <a href="#" id="show-registration">S'inscrire</a></p>
             </form>
         </div><!-- end col -->
     </div><!-- end row -->       
@@ -71,7 +71,6 @@
 <br>
 <center><a href=""></a></center>
 
-<script type="module" src="scripts/main.js"></script>
 <script type="module" src="scripts/auth.js"></script>
 </body>
 </html>
