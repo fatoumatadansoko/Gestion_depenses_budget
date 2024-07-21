@@ -1,0 +1,80 @@
+/* styles.css */
+body {
+    font-family: 'Work Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+}
+
+header {
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+}
+
+main {
+    padding: 1rem;
+}
+
+section {
+    margin-bottom: 1rem;
+}
+
+h1, h2 {
+    margin: 0 0 1rem 0;
+}
+
+#registration-section, #login-section {
+    display: none;
+}
+
+.btn-orange {
+    background-color: #F6511D;
+    border-color: #F6511D;
+    color: white;
+    font-size: 16px;
+    width: 100%;
+    max-width: 150px;
+}
+
+.btn-orange:hover {
+    background-color: #F6511D;
+    border-color: #F6511D;
+}
+
+/* Styles pour les écrans plus larges */
+@media (min-width: 768px) {
+    header {
+        padding: 2rem;
+    }
+
+    main {
+        padding: 2rem;
+    }
+
+    .btn-orange {
+        font-size: 18px;
+        max-width: 200px;
+    }
+
+    .col-sm-4 {
+        float: none;
+        margin: 0 auto;
+    }
+}
+
+@media (min-width: 1024px) {
+    header {
+        padding: 3rem;
+    }
+
+    main {
+        padding: 3rem;
+    }
+
+    .btn-orange {
+        font-size: 20px;
+        max-width: 250px;
+    }
+}
