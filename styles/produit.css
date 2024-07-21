@@ -1,0 +1,123 @@
+.calendar {
+    width: 100%;
+    border-collapse: collapse;
+}
+.calendar th, .calendar td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+.calendar .today {
+    background-color: #F6511D;
+}
+.product-details {
+    margin-top: 20px;
+}
+.add-product-btn {
+    margin-top: 20px;
+    font-size: 24px;
+    color: #fff;
+    background-color: #F6511D;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+}
+.add-product-btn:hover {
+    background-color: #F6511D;
+}
+.bought {
+    background-color: #d4edda; /* Couleur de fond verte pour indiquer que c'est acheté */
+    text-decoration: line-through; /* Texte barré */
+}
+
+.today {
+    background-color: #f0ad4e; /* Couleur de fond pour le jour actuel */
+}
+/* Ajouter de l'espace entre les cartes de dépenses */
+.list-group-item {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+/* styles/produit.css */
+
+.bought-checkbox {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #FF4757;
+    border-radius: 50%;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    margin-right: 10px; /* Marge entre la case à cocher et le texte */
+    align-self: center;
+}
+
+.bought-checkbox:checked::before {
+    content: '';
+    display: block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #FF4757;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+}
+
+.btn-orange {
+    background-color: #ff47565d;
+    border: 3px solid #FF4757;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 1000;
+}
+
+.btn-orange:hover {
+    background-color: #FF4757;
+    border-color: #FF4757;
+}
+
+.product-detail {
+    margin-left: 35px; /* Marge supplémentaire pour espacer le texte de la case à cocher */
+}
+/* Ajout pour le bouton de déconnexion en haut à droite */
+.btn-icon {
+    background-color: transparent;
+    border: none;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    color: #FF4757;
+    z-index: 1000;
+}
+
+.btn-icon:hover {
+    color: #FF6B6B;
+}
+
+/* Style pour le filtre */
+.filter-section {
+    margin-top: 20px;
+}
+
+.filter-section label {
+    font-weight: bold;
+}
+
+.filter-section select {
+    margin-top: 10px;
+}
