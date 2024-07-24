@@ -111,6 +111,28 @@
         </div>
         <form id="modify-product-form">
             <div class="form-group">
+                <label for="product-name">Nom du produit</label>
+                <input type="text" class="form-control" id="product-name" required>
+            </div>
+            <div class="form-group">
+                <label for="product-quantity">Quantité</label>
+                <input type="number" class="form-control" id="product-quantity" required>
+            </div>
+            <div class="form-group">
+                <label for="product-price">Prix</label>
+                <input type="number" step="0.01" class="form-control" id="product-price" required>
+            </div>
+            <div class="form-group">
+                <label for="product-date">Date</label>
+                <input type="date" class="form-control" id="product-date" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Modifier</button>
+            <button type="button" class="btn btn-danger" id="delete-button">Supprimer</button>
+        </form>
+        <!-- <form id="modify-product-form">
+
+            <input type="hidden" id="produitId">
+            <div class="form-group">
                 <label for="product-name">Nom du Produit</label>
                 <input type="text" class="form-control" id="product-name" required>
             </div>
@@ -129,7 +151,7 @@
             <button type="submit" class="btn btn-primary btn-submit">Enregistrer</button>
             <button type="button" class="btn btn-secondary" onclick="window.location.href='produits.html';">Annuler</button>
             <button type="button" class="btn btn-danger" id="delete-button">Supprimer</button>
-        </form>
+        </form> -->
     </div>
     <!-- <button class="btn btn-danger" id="logout-button">
         <i class="fas fa-sign-out-alt"></i> Déconnexion

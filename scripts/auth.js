@@ -16,29 +16,32 @@ const firebaseConfig = {
 // Initialiser Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-const auth = getAuth();
+const auth = getAuth(app);
 
 document.addEventListener("DOMContentLoaded", function() {
     const registrationSection = document.getElementById("registration-section");
     const loginSection = document.getElementById("login-section");
     const logoutButton = document.getElementById("logout");
-    const showRegistrationLink = document.getElementById("show-registration");
-    const showLoginLink = document.getElementById("show-login");
 
-    // Afficher la section d'inscription et masquer la section de connexion
-    showRegistrationLink.addEventListener("click", function(event) {
-        event.preventDefault();
+    // Fonction pour obtenir les paramètres d'URL
+    function getUrlParameter(name) {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        const results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    }
+
+    // Afficher la section appropriée en fonction du paramètre d'URL
+    const action = getUrlParameter('action');
+    if (action === 'register') {
         registrationSection.style.display = 'block';
         loginSection.style.display = 'none';
-    });
-
-    // Afficher la section de connexion et masquer la section d'inscription
-    showLoginLink.addEventListener("click", function(event) {
-        event.preventDefault();
+    } else if (action === 'login') {
         registrationSection.style.display = 'none';
         loginSection.style.display = 'block';
-    });
+    }
 
+    // Event listener pour le bouton d'inscription
     document.getElementById("register").addEventListener("click", function() {
         var email = document.getElementById("email").value;
         var password = document.getElementById("password").value;
@@ -55,16 +58,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                // Inscription réussie
                 console.log('Inscription réussie:', userCredential.user);
                 registrationSection.style.display = 'none';
                 loginSection.style.display = 'block';
             })
             .catch((error) => {
-                console.log('Erreur lors de l\'inscription:', error.message);
+                console.error('Erreur lors de l\'inscription:', error.message);
+                alert('Erreur lors de l\'inscription: ' + error.message);
             });
     });
 
+    // Event listener pour le bouton de connexion
     document.getElementById("login").addEventListener("click", function() {
         var email = document.getElementById("login_email").value;
         var password = document.getElementById("login_password").value;
@@ -81,30 +85,31 @@ document.addEventListener("DOMContentLoaded", function() {
 
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
-                // Connexion réussie
                 console.log('Connexion réussie:', userCredential.user);
                 logoutButton.style.display = 'block';
                 window.location.href = 'produits.html'; // Redirection vers la page des produits
             })
             .catch((error) => {
-                console.log('Erreur lors de la connexion:', error.message);
+                console.error('Erreur lors de la connexion:', error.message);
+                alert('Erreur lors de la connexion: ' + error.message);
             });
     });
 
-   
-
-    // Configuration initiale de l'affichage en fonction de l'état d'authentification
+    // Gestion de l'état d'authentification
     auth.onAuthStateChanged((user) => {
         if (user) {
-            // L'utilisateur est connecté
             logoutButton.style.display = 'block';
             if (window.location.pathname !== '/produits.html') {
                 window.location.href = 'produits.html'; // Redirection vers la page des produits si ce n'est pas déjà sur cette page
             }
         } else {
-            // Aucun utilisateur n'est connecté
-            registrationSection.style.display = 'block';
-            loginSection.style.display = 'none';
+            if (action === 'register') {
+                registrationSection.style.display = 'block';
+                loginSection.style.display = 'none';
+            } else {
+                registrationSection.style.display = 'none';
+                loginSection.style.display = 'block';
+            }
         }
     });
 });
