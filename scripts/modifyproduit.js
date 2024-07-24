@@ -73,22 +73,41 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             const deleteButton = document.getElementById('delete-button');
-            deleteButton.addEventListener('click', async () => {
-                if (confirm('Es-tu sûr de vouloir supprimer ce produit?')) {
-                    try {
-                        await remove(dbRef);
-                        Swal.fire({
-                            title: "Supprimé!",
-                            text: "Le produit a été supprimé avec succès!",
-                            icon: "success"
-                        }).then(() => {
-                            window.location.href = 'produits.html';
-                        });
-                    } catch (error) {
-                        console.error('Erreur lors de la suppression du produit:', error);
-                    }
-                }
+
+deleteButton.addEventListener('click', async () => {
+    const { isConfirmed } = await Swal.fire({
+        title: 'Es-tu sûr?',
+        text: "Cette action supprimera définitivement ce produit.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#FF4757',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Oui, supprimer!',
+        cancelButtonText: 'Annuler'
+    });
+
+    if (isConfirmed) {
+        try {
+            await remove(dbRef);
+            Swal.fire({
+                title: 'Supprimé!',
+                text: 'Le produit a été supprimé avec succès!',
+                icon: 'success',
+                confirmButtonColor: '#FF4757'
+            }).then(() => {
+                window.location.href = 'produits.html';
             });
+        } catch (error) {
+            console.error('Erreur lors de la suppression du produit:', error);
+            Swal.fire({
+                title: 'Erreur!',
+                text: 'Une erreur est survenue lors de la suppression du produit.',
+                icon: 'error',
+                confirmButtonColor: '#FF4757'
+            });
+        }
+    }
+});
         } else {
             alert("Vous devez être connecté pour modifier un produit.");
             window.location.href = 'auth.html';

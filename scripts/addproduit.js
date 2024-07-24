@@ -38,11 +38,15 @@ document.addEventListener('DOMContentLoaded', function() {
         isValid = validateField(document.getElementById('product-name'), document.getElementById('errorName'), 3) && isValid;
         isValid = validateField(document.getElementById('product-quantity'), document.getElementById('errorQuantity'), 1) && isValid;
         isValid = validateField(document.getElementById('product-price'), document.getElementById('errorPrice'), 1) && isValid;
-        document.getElementById('submitBtn').disabled = !isValid;
+        return isValid;
     };
 
     const formInputs = document.querySelectorAll('#add-product-form input');
-    formInputs.forEach(input => input.addEventListener('input', validateForm));
+    formInputs.forEach(input => {
+        input.addEventListener('input', () => {
+            document.getElementById(`error${input.id.charAt(0).toUpperCase() + input.id.slice(1)}`).innerHTML = "";
+        });
+    });
 
     onAuthStateChanged(auth, (user) => {
         if (user) {
@@ -59,6 +63,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (!currentUser) {
             alert("Vous devez être connecté pour ajouter un produit.");
+            return;
+        }
+
+        const isValid = validateForm();
+        if (!isValid) {
+            alert("Veuillez corriger les erreurs dans le formulaire.");
             return;
         }
 
@@ -90,7 +100,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             
             form.reset();
-            validateForm(); // Ensure the submit button is disabled
         } catch (error) {
             console.error('Erreur lors de l\'ajout du produit:', error);
             alert('Erreur lors de l\'ajout du produit: ' + error.message);
