@@ -45,36 +45,22 @@ h1, h2 {
 
 /* Styles pour les écrans plus larges */
 @media (min-width: 768px) {
-    header {
-        padding: 2rem;
+    .container .col-sm-4 {
+        max-width: 70% !important; /* Augmenter la largeur du formulaire */
     }
 
-    main {
-        padding: 2rem;
-    }
-
-    .btn-orange {
-        font-size: 18px;
-        max-width: 200px;
-    }
-
-    .col-sm-4 {
-        float: none;
-        margin: 0 auto;
+    .container .form-control {
+        font-size: 16px !important; /* Augmenter la taille des champs */
     }
 }
 
 @media (min-width: 1024px) {
-    header {
-        padding: 3rem;
+    .container .col-sm-4 {
+        max-width: 80% !important; /* Augmenter encore la largeur du formulaire */
     }
 
-    main {
-        padding: 3rem;
-    }
-
-    .btn-orange {
-        font-size: 20px;
-        max-width: 250px;
+    .container .form-control {
+        font-size: 18px !important; /* Augmenter la taille des champs */
     }
 }
+
