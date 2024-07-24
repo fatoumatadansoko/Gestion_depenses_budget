@@ -1,5 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
 import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDiW8qxDzIYMQmwrwjbCQwmVbdZtbojW-Y",
@@ -15,10 +16,16 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const auth = getAuth(app);
 
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
     const productDetailsContainer = document.getElementById('product-details');
     const filterDay = document.getElementById('filter-day');
+    const calendarBody = document.getElementById('calendar-body');
+
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
 
     // Fonction pour calculer le prix total
     const calculateTotalPrice = (products) => {
@@ -27,6 +34,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Fonction pour afficher les détails des produits
     const displayProductDetails = (products) => {
+        console.log('Affichage des produits:', products); // Ajouté pour débogage
         productDetailsContainer.innerHTML = '';
 
         let totalPrice = calculateTotalPrice(products);
@@ -77,16 +85,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     // Fonction pour charger les produits depuis Firebase
-    const loadProductsFromFirebase = async () => {
-        const dbRef = ref(db, 'products/');
-        const snapshot = await get(dbRef);
-        const products = snapshot.exists() ? Object.entries(snapshot.val()).map(([id, product]) => ({ id, ...product })) : [];
-        return products;
+    const loadProductsFromFirebase = async (userId) => {
+        const dbRef = ref(db, `users/${userId}/products`);
+        try {
+            const snapshot = await get(dbRef);
+            const products = snapshot.exists() ? Object.entries(snapshot.val()).map(([id, product]) => ({ id, ...product })) : [];
+            console.log('Produits chargés:', products); // Ajouté pour débogage
+            return products;
+        } catch (error) {
+            console.error('Erreur lors de la récupération des produits:', error);
+            return [];
+        }
     };
 
     // Fonction pour mettre à jour le statut d'achat d'un produit
     const updateProductBoughtStatus = async (productId, bought) => {
-        const dbRef = ref(db, `products/${productId}`);
+        const userId = auth.currentUser.uid;
+        const dbRef = ref(db, `users/${userId}/products/${productId}`);
         await update(dbRef, { bought: bought });
 
         // Mettre à jour uniquement l'élément DOM correspondant
@@ -121,46 +136,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     };
 
-    try {
-        const products = await loadProductsFromFirebase();
-        loadFilterDays(products); // Charger les options du filtre
-        if (products.length === 0) {
-            productDetailsContainer.innerHTML = "<p>Aucun produit trouvé.</p>";
-        } else {
-            displayProductDetails(products);
-        }
-
-        // Mettre à jour l'affichage en fonction du filtre sélectionné
-        filterDay.addEventListener('change', (event) => {
-            const selectedDay = event.target.value;
-            const filteredProducts = filterProductsByDay(products, selectedDay);
-            displayProductDetails(filteredProducts);
-        });
-
-    } catch (error) {
-        console.error('Erreur lors de la récupération des produits:', error);
-    }
-});
-
-// Code pour générer le calendrier
-document.addEventListener('DOMContentLoaded', function() {
-    const calendarBody = document.getElementById('calendar-body');
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = today.getMonth();
-
+    // Fonction pour générer le calendrier
     function generateCalendar(year, month) {
         const firstDay = new Date(year, month, 1).getDay();
         const lastDate = new Date(year, month + 1, 0).getDate();
 
         let calendarHtml = '<tr>';
 
-        // Fill the initial empty cells
+        // Remplir les cellules vides initiales
         for (let i = 0; i < firstDay; i++) {
             calendarHtml += '<td></td>';
         }
 
-        // Fill the calendar with dates
+        // Remplir le calendrier avec les dates
         for (let day = 1; day <= lastDate; day++) {
             const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
             const className = isToday ? 'today' : '';
@@ -171,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // Close the last row if necessary
+        // Fermer la dernière ligne si nécessaire
         if ((lastDate + firstDay) % 7 !== 0) {
             for (let i = (lastDate + firstDay) % 7; i < 7; i++) {
                 calendarHtml += '<td></td>';
@@ -182,5 +170,38 @@ document.addEventListener('DOMContentLoaded', function() {
         calendarBody.innerHTML = calendarHtml;
     }
 
+    // Vérifier l'état de connexion
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            // Utilisateur connecté
+            const userId = user.uid;
+
+            try {
+                const products = await loadProductsFromFirebase(userId);
+                loadFilterDays(products); // Charger les options du filtre
+                if (products.length === 0) {
+                    productDetailsContainer.innerHTML = "<p>Commencez à planifier vos courses.</p>";
+                } else {
+                    displayProductDetails(products);
+                }
+
+                // Mettre à jour l'affichage en fonction du filtre sélectionné
+                filterDay.addEventListener('change', (event) => {
+                    const selectedDay = event.target.value;
+                    const filteredProducts = filterProductsByDay(products, selectedDay);
+                    displayProductDetails(filteredProducts);
+                });
+
+            } catch (error) {
+                console.error('Erreur lors de la récupération des produits:', error);
+                productDetailsContainer.innerHTML = "<p>Erreur lors de la récupération des produits.</p>";
+            }
+        } else {
+            // Aucun utilisateur connecté
+            productDetailsContainer.innerHTML = "<p>Veuillez vous connecter pour voir vos produits.</p>";
+        }
+    });
+
+    // Générer le calendrier
     generateCalendar(year, month);
 });

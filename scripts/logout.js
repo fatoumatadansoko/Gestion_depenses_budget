@@ -9,7 +9,7 @@ document.getElementById('logout-button').addEventListener('click', async () => {
         console.log('Déconnexion réussie');
         // Assurer que la redirection est effectuée après que la déconnexion soit terminée
         setTimeout(() => {
-            window.location.href = 'auth.html'; // Redirection vers la page d'authentification
+            window.location.href = 'index.html'; // Redirection vers la page d'authentification
         }, 1000); // Délai de 1 seconde pour garantir que la déconnexion est bien terminée
     } catch (error) {
         console.error('Erreur lors de la déconnexion:', error.message);

@@ -1,6 +1,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
 import { getDatabase, ref, set, push } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
 
+// Configuration Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyDiW8qxDzIYMQmwrwjbCQwmVbdZtbojW-Y",
     authDomain: "projet-gestion-depense-budget.firebaseapp.com",
@@ -11,12 +13,14 @@ const firebaseConfig = {
     measurementId: "G-8SS2X3JYTM"
 };
 
-// Initialize Firebase
+// Initialiser Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+const auth = getAuth(app);
 
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('add-product-form');
+    let currentUser = null;
 
     const validateField = (input, errorElement, minLength, pattern) => {
         let isValid = true;
@@ -40,8 +44,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const formInputs = document.querySelectorAll('#add-product-form input');
     formInputs.forEach(input => input.addEventListener('input', validateForm));
 
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            currentUser = user;
+        } else {
+            currentUser = null;
+            // Rediriger vers la page de connexion si l'utilisateur n'est pas connecté
+            window.location.href = 'auth.html?action=login';
+        }
+    });
+
     form.addEventListener('submit', async (e) => {
         e.preventDefault(); // Prevent the default form submission
+
+        if (!currentUser) {
+            alert("Vous devez être connecté pour ajouter un produit.");
+            return;
+        }
 
         const date = document.getElementById('product-date').value;
         const name = document.getElementById('product-name').value;
@@ -52,16 +71,17 @@ document.addEventListener('DOMContentLoaded', function() {
             date: date,
             name: name,
             quantity: quantity,
-            price: price
+            price: price,
+            userId: currentUser.uid // Associer la dépense à l'utilisateur connecté
         };
 
         try {
-            const productRef = push(ref(db, 'products/'));
+            const productRef = push(ref(db, `users/${currentUser.uid}/products`));
             await set(productRef, newProduct);
             
             // Afficher une notification SweetAlert2
             Swal.fire({
-                title: 'Good job!',
+                title: 'Bon travail!',
                 text: 'Produit ajouté avec succès!',
                 icon: 'success',
                 confirmButtonText: 'OK'
